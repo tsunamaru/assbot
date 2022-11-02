@@ -1,0 +1,6 @@
+.env
+.venv
+*.kubeconfig
+.DS_Store
+.vscode
+Telethon.*

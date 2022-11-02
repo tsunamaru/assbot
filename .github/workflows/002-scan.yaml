@@ -1,0 +1,26 @@
+name: Anchore Container Scan
+on: push
+jobs:
+  Anchore-Build-Scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+      with:
+        lfs: false
+
+    - name: Build the Docker image
+      run: docker build . --file build/ci-build.Dockerfile --tag localbuild/testimage:latest
+
+    - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
+      uses: anchore/scan-action@v3
+      with:
+        image: "localbuild/testimage:latest"
+        acs-report-enable: true
+        severity-cutoff: "high"
+        fail-build: false
+
+    - name: Upload Anchore Scan Report
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
