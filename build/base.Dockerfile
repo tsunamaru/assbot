@@ -1,4 +1,4 @@
-FROM docker.io/python:3.10-slim
+FROM docker.io/python:3.11-slim
 
 ADD ./requirements.txt /tmp/requirements.txt
 
