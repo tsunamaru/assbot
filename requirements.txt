@@ -1,5 +1,4 @@
-aiogram==2.22.1
-Telethon==1.25.2
+aiogram==2.23.1
+Telethon==1.25.4
 python-decouple
-aiohttp
 aiofiles
