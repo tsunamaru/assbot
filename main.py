@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+# pylint: disable=multiple-imports, missing-function-docstring
 
+import logging, os, subprocess, hashlib, random, string
 import asyncio, aiohttp, aiofiles
-import string
+from decouple import config
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ContentType
-import logging, os, subprocess, hashlib, random, string
-from decouple import config
 from cfg import SUBSCRIBERS_ID
 
 # if .env present, load it, otherwise load from environment

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
+# pylint: disable=multiple-imports, missing-function-docstring, unused-import
 
+import logging, os, time
+from decouple import config
 from telethon import TelegramClient, events, sync
 from telethon.tl.types import Channel, InputChannel, PeerChannel
-import logging, os
-from decouple import config
-import time
 
 # if .env present, load it, otherwise load from environment
 if os.path.exists(".env"):
