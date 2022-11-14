@@ -67,6 +67,8 @@ BAD_WORDS = [
     "t.me/joinchat",
     "#реклама",
     "#промо",
+    "38 066 580 34 98",
+    "38 093 119 29 84",
 ]
 
 bot = Bot(token=TOKEN)
@@ -230,8 +232,10 @@ async def random_string(message: types.Message):
     if message.from_user.username != str(ADMIN):
         await message.reply("You're not allowed to do this.")
         return
-    
-    await message.reply("".join(random.choices(string.ascii_letters + string.digits, k=16)))
+
+    await message.reply(
+        "".join(random.choices(string.ascii_letters + string.digits, k=16))
+    )
 
 
 @dp.message_handler(content_types=BAD_CONTENT_TYPES)
@@ -319,7 +323,7 @@ async def msg(message: types.Message):
             if len(clean_message) == 0:
                 await message.reply(f"Empty message!")
                 return
-            
+
             await bot.send_message(
                 chat_id=CHANNEL, text=clean_message, reply_to_message_id=msg_id
             )
