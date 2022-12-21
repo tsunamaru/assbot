@@ -80,4 +80,4 @@ See example in ./k8s directory.
 <!-- badge links -->
 
 [actions-workflow-test]: https://github.com/tsunamaru/assbot/actions?query=workflow%3ABuild%20and%20Deploy
-[actions-workflow-test-badge]: https://img.shields.io/github/workflow/status/tsunamaru/assbot/Build%20and%20Deploy?label=CI&style=for-the-badge&logo=github
+[actions-workflow-test-badge]: https://img.shields.io/github/actions/workflow/status/tsunamaru/assbot/001-main.yaml?branch=master&label=CI&logo=github&style=for-the-badge
