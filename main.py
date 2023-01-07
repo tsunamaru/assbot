@@ -45,10 +45,14 @@ ATTACH_CONTENT_TYPES = [
     ContentType.DOCUMENT,
     ContentType.AUDIO,
 ]
-BAD_CONTENT_TYPES = [ContentType.VIDEO_NOTE, ContentType.VOICE]
+BAD_CONTENT_TYPES = [
+    ContentType.VIDEO_NOTE,
+    ContentType.VOICE,
+]
 
 BAD_WORDS = [
-    "заказ",
+    "финка нквд",
+    "образца 1939",
     "ножн",
     "клинок",
     "клинка",
@@ -62,6 +66,7 @@ BAD_WORDS = [
     "79886444614",
     "nozhi_shop",
     "nozhishop",
+    "barkrf",
     "arenda_odessa",
     "t.me/+",
     "t.me/joinchat",
