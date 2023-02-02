@@ -156,7 +156,7 @@ async def send_poll(message: types.Message):
         return
 
     poll = await message.reply_poll(
-        "Activity check", options=["ack", "reject"], is_anonymous=False
+        "Опрос активности", options=["нажми сюда", "или сюда"], is_anonymous=False
     )
 
     for x in SUBSCRIBERS_ID:
