@@ -180,6 +180,10 @@ async def stop_poll(message: types.Message):
         await message.reply("You're not allowed to do this.")
         return
 
+    if message.reply_to_message is None:
+        await message.reply("Reply to poll you want to close.")
+        return
+
     await bot.stop_poll(message.chat.id, message.reply_to_message.message_id)
 
 
