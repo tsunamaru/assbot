@@ -44,7 +44,7 @@ jobs:
           VERSIONS=()
           if [[ $GITHUB_REF == refs/heads/master ]]; then
             VERSIONS+=("latest")
-            VERSIONS+=("RELEASE.$(date -u '+%Y-%m-%dT%H:%M:%SZ')")
+            VERSIONS+=("RELEASE.$(date -u '+%Y-%m-%dT%H-%M-%SZ')")
           else
             VERSIONS+=("${GITHUB_REF##*/}-${GITHUB_SHA:0:7}-$(date +%s)")
           fi
