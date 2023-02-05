@@ -12,6 +12,7 @@ on:
 
 env:
   CI_IMAGE_NAME: ci-build
+  BASE_IMAGE_NAME: base
 
 jobs:
   build:
