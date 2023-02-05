@@ -3,6 +3,7 @@ on: push
 jobs:
   Anchore-Build-Scan:
     runs-on: ubuntu-latest
+    if: not(contains(github.event.head_commit.message, '[ci-base-rebuild]'))
     steps:
     - name: Checkout the code
       uses: actions/checkout@v3
