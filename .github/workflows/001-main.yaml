@@ -40,13 +40,22 @@ jobs:
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository }}/$CI_IMAGE_NAME
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          [ "$VERSION" == "master" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
 
-          docker buildx build --platform linux/amd64,linux/386,linux/arm/v7,linux/arm64 -t $IMAGE_ID:$VERSION . --push -f build/ci-build.Dockerfile
+          VERSIONS=()
+          if [[ $GITHUB_REF == refs/heads/master ]]; then
+            VERSIONS+=("latest")
+            VERSIONS+=("RELEASE.$(date -u +%Y%m%dT%H%M%S)")
+          else
+            VERSIONS+=("${GITHUB_REF##*/}-${GITHUB_SHA:0:7}-$(date +%s)")
+          fi
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSIONS=${VERSIONS[@]}
+
+          for VERSION in "${VERSIONS[@]}"; do
+            echo "Building $IMAGE_ID:$VERSION"
+            docker buildx build --platform linux/amd64,linux/386,linux/arm/v7,linux/arm64 -t $IMAGE_ID:$VERSION . --push -f build/ci-build.Dockerfile
+          done
 
   # deploy:
   #   runs-on: ubuntu-latest
