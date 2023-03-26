@@ -15,7 +15,7 @@ Handy companion for [@assthread](https://t.me/assthread) -- pseudo-anonymous cha
 - `/stop_poll` - [admin only] stop activity check poll (on reply to poll message)
 
 ## Quick start
-**BE AWARE TO RUN IT WITH YOUR FAKE ACCOUNT**
+**BE AWARE TO RUN IT WITH YOUR FAKE ACCOUNT**\
 Telegram could simply log you off and you will never see your account again.
 0. Create new bot via [@BotFather](t.me/BotFather) and get bot token.
 1. Add bot to your channel and grant it admin privileges.
