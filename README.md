@@ -16,7 +16,7 @@ Handy companion for [@assthread](https://t.me/assthread) -- pseudo-anonymous cha
 
 ## Quick start
 **BE AWARE TO RUN IT WITH YOUR FAKE ACCOUNT**\
-Telegram could simply log you off (as you proceed with helpers.py) and you will never see your account again.
+Telegram could simply log you off (as you proceed with helpers.py) and **you will never see your account again**.
 
 0. Create new bot via [@BotFather](t.me/BotFather) and get bot token.
 1. Add bot to your channel and grant it admin privileges.
