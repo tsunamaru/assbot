@@ -162,7 +162,6 @@ async def send_poll(message: types.Message):
 
     for x in SUBSCRIBERS_ID:
         try:
-
             await asyncio.sleep(0.5)  # to avoid flood limit
             await bot.forward_message(
                 chat_id=int(x),
@@ -195,7 +194,6 @@ async def ping(message: types.Message):
         return
 
     if len(message.text.split()) > 1:
-
         # verify that ping target is Telegram ID, otherwise return error
         target = message.text.split()[1] if message.text.split()[1].isdigit() else None
 
@@ -204,7 +202,6 @@ async def ping(message: types.Message):
             return
 
         try:
-
             pingmsg = await bot.send_message(
                 chat_id=int(target),
                 text="Ping test, please ignore...",
@@ -215,15 +212,12 @@ async def ping(message: types.Message):
             await message.reply("Ping succesfuly sent to {}".format(target))
 
         except Exception as e:
-
             logging.error("Error sending ping to {}: {}".format(target, e))
             await message.reply("Error sending ping to {}: {}".format(target, e))
 
     else:
-
         for x in SUBSCRIBERS_ID:
             try:
-
                 await asyncio.sleep(0.5)  # to avoid flood limit
                 pingmsg = await bot.send_message(
                     chat_id=int(x),
@@ -315,7 +309,6 @@ async def delete_msg(message: types.Message):
 
 @dp.message_handler(content_types=COMMON_CONTENT_TYPES)
 async def msg(message: types.Message):
-
     sender_status = await bot.get_chat_member(CHANNEL, message.from_user.id)
     if not sender_status["status"] in ["administrator", "creator", "member"]:
         await message.reply(f"Refusing to forward your message, reason: not subscribed")
