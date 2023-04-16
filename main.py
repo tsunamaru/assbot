@@ -14,15 +14,16 @@ if os.path.exists(".env"):
     TOKEN = config("TOKEN")
     CHANNEL = config("CHANNEL")
     ADMIN = config("ADMIN")
+    UPSTREAM = config("UPSTREAM", default=None)
 else:
     LOGLEVEL = os.environ.get("LOGLEVEL", "INFO")
     TOKEN = os.environ.get("TOKEN")
     CHANNEL = os.environ.get("CHANNEL")
     ADMIN = os.environ.get("ADMIN")
+    UPSTREAM = os.environ.get("UPSTREAM", None)
 
 # Some static variables
 TG_ADDRESS = f"https://t.me/{CHANNEL.split('@')[1]}/"
-UPSTREAM = "https://raw.githubusercontent.com/tsunamaru/assbot/master/main.py"
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",

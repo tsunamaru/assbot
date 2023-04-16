@@ -32,6 +32,8 @@ items:
             value: "INFO"
           - name: ADMIN
             value: "konata04"
+          - name: UPSTREAM
+            value: "https://raw.githubusercontent.com/tsunamaru/assbot/master/main.py"
           image: ghcr.io/tsunamaru/assbot/ci-build:latest
           imagePullPolicy: Always
           name: bot
