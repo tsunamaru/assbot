@@ -242,6 +242,41 @@ async def random_string(message: types.Message):
     )
 
 
+@dp.message_handler(commands=["request_admin"])
+async def request_admin(message: types.Message):
+    sender_status = await bot.get_chat_member(CHANNEL, message.from_user.id)
+
+    if sender_status["status"] in ["administrator", "creator"]:
+        await message.reply("You're already an admin!")
+        return
+
+    if not sender_status["status"] in ["member", "restricted"]:
+        await message.reply("Please join the channel first.")
+        return
+
+    admins = await bot.get_chat_administrators(CHANNEL)
+    if len(admins) == 50:
+        await message.reply(
+            "Channel admin capacity is full, please wait until next activity poll takes place."
+        )
+        return
+
+    admin_id = [x["user"]["id"] for x in admins if x["user"]["username"] == ADMIN][0]
+    await bot.send_message(
+        chat_id=admin_id,
+        text="{} ({}) requested admin rights. ID: {}".format(
+            message.from_user.full_name,
+            message.from_user.username,
+            message.from_user.id,
+        ),
+    )
+
+    await message.reply(
+        "Your request has been sent and will be processed within few hours.\n"
+        + "Current channel admin capacity is: {}/50.".format(len(admins))
+    )
+
+
 @dp.message_handler(content_types=BAD_CONTENT_TYPES)
 async def decline_msg(message: types.Message):
     await message.reply(f"Хуй будешь?")

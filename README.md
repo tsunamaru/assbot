@@ -13,6 +13,7 @@ Handy companion for [@assthread](https://t.me/assthread) -- pseudo-anonymous cha
 - `/ping` - [admin only] check if bot is able to reach specified user ID (or everyone from subscribers list if no ID is specified)
 - `/send_poll` - [admin only] start activity check poll for all subscruibers
 - `/stop_poll` - [admin only] stop activity check poll (on reply to poll message)
+- `/request_admin` - request admin privileges
 
 ## Quick start
 0. Create new bot via [@BotFather](t.me/BotFather) and get bot token.
