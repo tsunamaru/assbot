@@ -75,6 +75,17 @@ BAD_WORDS = [
     "#промо",
     "38 066 580 34 98",
     "38 093 119 29 84",
+    "EVGEN AVTO",
+    "study_taro",
+    "Kizl_nozhi",
+    "kizlyarnozh05"
+    "cgpods",
+    "подписаться на канал",
+    "подпишись",
+    "подписывайся",
+    "подписывайтесь",
+    "bc1q2cg5lyecjj5c9370wul84hjyrflwm7aa7hr2ll",
+    "bc1qwa36ldcfkjdq33qu8n3cragsh6xexcf3an7cay",
 ]
 
 bot = Bot(token=TOKEN)
