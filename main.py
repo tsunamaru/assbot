@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # pylint: disable=multiple-imports, missing-function-docstring
 
-import logging, os, subprocess, hashlib, random, string
+import logging, os, subprocess, hashlib, locale
 import asyncio, aiohttp, aiofiles
 from decouple import config
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ContentType
 from cfg import SUBSCRIBERS_ID
+
+if locale.getpreferredencoding().upper() != 'UTF-8':
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # if .env present, load it, otherwise load from environment
 if os.path.exists(".env"):
@@ -78,7 +81,7 @@ BAD_WORDS = [
     "EVGEN AVTO",
     "study_taro",
     "Kizl_nozhi",
-    "kizlyarnozh05"
+    "kizlyarnozh05",
     "cgpods",
     "подписаться на канал",
     "подпишись",
@@ -86,7 +89,10 @@ BAD_WORDS = [
     "подписывайтесь",
     "bc1q2cg5lyecjj5c9370wul84hjyrflwm7aa7hr2ll",
     "bc1qwa36ldcfkjdq33qu8n3cragsh6xexcf3an7cay",
+    "раррв",
+    "rarrw",
 ]
+BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
@@ -94,7 +100,10 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=["start", "test"])
 async def start(message: types.Message):
-    await message.reply(f"Просто пиши свою хуйню и я отправлю её в {CHANNEL}")
+    await message.reply(
+        f"Просто пиши свою хуйню и я отправлю её в {CHANNEL}\n"
+        + "Чтобы получить админку в канале, отправь /request_admin"
+    )
 
 
 @dp.message_handler(commands=["whoami"])
@@ -242,17 +251,6 @@ async def ping(message: types.Message):
                 logging.error("Error sending ping to {}: {}".format(x, e))
 
 
-@dp.message_handler(commands=["rndstr"])
-async def random_string(message: types.Message):
-    if message.from_user.username != str(ADMIN):
-        await message.reply("You're not allowed to do this.")
-        return
-
-    await message.reply(
-        "".join(random.choices(string.ascii_letters + string.digits, k=16))
-    )
-
-
 @dp.message_handler(commands=["request_admin"])
 async def request_admin(message: types.Message):
     sender_status = await bot.get_chat_member(CHANNEL, message.from_user.id)
@@ -309,14 +307,6 @@ async def delete_msg(message: types.Message):
     lambda message: message.text
     and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
 )
-async def decline_msg(message: types.Message):
-    await message.reply(f"Хуй будешь?")
-    await message.delete()
-    logging.info(
-        f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.text}"
-    )
-
-
 @dp.message_handler(
     lambda message: message.caption
     and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
@@ -326,7 +316,7 @@ async def decline_msg(message: types.Message):
     await message.reply(f"Хуй будешь?")
     await message.delete()
     logging.info(
-        f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.caption}"
+        f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.text if message.text else message.caption}"
     )
 
 
@@ -334,13 +324,6 @@ async def decline_msg(message: types.Message):
     lambda message: message.text
     and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
 )
-async def delete_msg(message: types.Message):
-    await message.delete()
-    logging.info(
-        f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.text}"
-    )
-
-
 @dp.channel_post_handler(
     lambda message: message.caption
     and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
@@ -349,7 +332,7 @@ async def delete_msg(message: types.Message):
 async def delete_msg(message: types.Message):
     await message.delete()
     logging.info(
-        f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.caption}"
+        f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.text if message.text else message.caption}"
     )
 
 
