@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # pylint: disable=multiple-imports, missing-function-docstring
 
-import logging, os, subprocess, hashlib, locale
+import locale
+
+if locale.getpreferredencoding().upper() != "UTF-8":
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+
+import logging, os, subprocess, hashlib
 import asyncio, aiohttp, aiofiles
 from decouple import config
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ContentType
 from cfg import SUBSCRIBERS_ID
-
-if locale.getpreferredencoding().upper() != 'UTF-8':
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 # if .env present, load it, otherwise load from environment
 if os.path.exists(".env"):
@@ -90,7 +92,9 @@ BAD_WORDS = [
     "bc1q2cg5lyecjj5c9370wul84hjyrflwm7aa7hr2ll",
     "bc1qwa36ldcfkjdq33qu8n3cragsh6xexcf3an7cay",
     "раррв",
+    "рарв",
     "rarrw",
+    "пук",
 ]
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
 
@@ -139,7 +143,9 @@ async def hash(message: types.Message):
         f.close()
 
     if hash_remote == hash_local:
-        await message.reply(f"Hashes match!")
+        await message.reply(
+            "Hashes match!\nRemote: {}\nLocal: {}".format(hash_remote, hash_local)
+        )
         logging.info("Hash check passed!")
     elif LOGLEVEL == "DEBUG":
         await message.reply(f"Hashes do not match, but DEBUG is set.")
@@ -286,54 +292,49 @@ async def request_admin(message: types.Message):
     )
 
 
+@dp.message_handler(
+    lambda message: message.text
+    and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
+)
+@dp.message_handler(
+    lambda message: message.caption
+    and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
+    content_types=ATTACH_CONTENT_TYPES,
+)
 @dp.message_handler(content_types=BAD_CONTENT_TYPES)
 async def decline_msg(message: types.Message):
     await message.reply(f"Хуй будешь?")
     await message.delete()
-    logging.info(
-        f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: {message.content_type}"
-    )
+    if message.content_type in BAD_CONTENT_TYPES:
+        logging.info(
+            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: {message.content_type}"
+        )
+    else:
+        logging.info(
+            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.text if message.text else message.caption}"
+        )
 
 
+@dp.channel_post_handler(
+    lambda message: message.text
+    and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
+)
+@dp.channel_post_handler(
+    lambda message: message.caption
+    and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
+    content_types=ATTACH_CONTENT_TYPES,
+)
 @dp.channel_post_handler(content_types=BAD_CONTENT_TYPES)
 async def delete_msg(message: types.Message):
     await message.delete()
-    logging.info(
-        f"Deleted post with ID {message.message_id}, reason: {message.content_type}"
-    )
-
-
-@dp.message_handler(
-    lambda message: message.text
-    and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
-)
-@dp.message_handler(
-    lambda message: message.caption
-    and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
-    content_types=ATTACH_CONTENT_TYPES,
-)
-async def decline_msg(message: types.Message):
-    await message.reply(f"Хуй будешь?")
-    await message.delete()
-    logging.info(
-        f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.text if message.text else message.caption}"
-    )
-
-
-@dp.channel_post_handler(
-    lambda message: message.text
-    and sum(list(map(lambda word: word in message.text.lower(), BAD_WORDS)))
-)
-@dp.channel_post_handler(
-    lambda message: message.caption
-    and sum(list(map(lambda word: word in message.caption.lower(), BAD_WORDS))),
-    content_types=ATTACH_CONTENT_TYPES,
-)
-async def delete_msg(message: types.Message):
-    await message.delete()
-    logging.info(
-        f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.text if message.text else message.caption}"
-    )
+    if message.content_type in BAD_CONTENT_TYPES:
+        logging.info(
+            f"Deleted post with ID {message.message_id}, reason: {message.content_type}"
+        )
+    else:
+        logging.info(
+            f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.text if message.text else message.caption}"
+        )
 
 
 @dp.message_handler(content_types=COMMON_CONTENT_TYPES)
@@ -372,6 +373,8 @@ async def msg(message: types.Message):
             msg_id = int(link.split(TG_ADDRESS)[1])
             clean_message = message.caption.split(link)[1]
 
+            # TODO: find the way to deal with multiple
+            # attachments and combined media types
             if message.content_type == ContentType.PHOTO:
                 await bot.send_photo(
                     chat_id=CHANNEL,
