@@ -30,12 +30,6 @@ else:
 # Some static variables
 TG_ADDRESS = f"https://t.me/{CHANNEL.split('@')[1]}/"
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s: %(message)s",
-    encoding="utf-8",
-    level=logging.getLevelName(LOGLEVEL),
-)
-
 COMMON_CONTENT_TYPES = [
     ContentType.TEXT,
     ContentType.PHOTO,
@@ -45,18 +39,20 @@ COMMON_CONTENT_TYPES = [
     ContentType.STICKER,
     ContentType.ANIMATION,
 ]
+
 ATTACH_CONTENT_TYPES = [
     ContentType.PHOTO,
     ContentType.VIDEO,
     ContentType.DOCUMENT,
     ContentType.AUDIO,
 ]
+
 BAD_CONTENT_TYPES = [
     ContentType.VIDEO_NOTE,
     ContentType.VOICE,
 ]
 
-PROHIBITED_STICKERS = [
+BAD_STICKERS = [
     "pukpukpukpukpukpukpukpukpukpuk",
     "ShnobelShnobel",
     "ShnobelLegend",
@@ -103,7 +99,14 @@ BAD_WORDS = [
     "пук",
     "шнобель",
 ]
+
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s: %(message)s",
+    encoding="utf-8",
+    level=logging.getLevelName(LOGLEVEL),
+)
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
@@ -310,8 +313,7 @@ async def request_admin(message: types.Message):
 )
 @dp.message_handler(content_types=BAD_CONTENT_TYPES)
 @dp.message_handler(
-    lambda message: message.sticker
-    and message.sticker.set_name in PROHIBITED_STICKERS,
+    lambda message: message.sticker and message.sticker.set_name in BAD_STICKERS,
     content_types=ContentType.STICKER,
 )
 async def decline_msg(message: types.Message):
@@ -319,11 +321,15 @@ async def decline_msg(message: types.Message):
     await message.delete()
     if message.content_type in BAD_CONTENT_TYPES:
         logging.info(
-            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: {message.content_type}"
+            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: bad media: {message.content_type}"
+        )
+    elif message.sticker:
+        logging.info(
+            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: bad sticker: {message.sticker.set_name}"
         )
     else:
         logging.info(
-            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: fuzzy match: {message.text if message.text else message.caption}"
+            f"Declined message from {message.from_user.username} with ID {message.from_user.id}, reason: bad word: {message.text if message.text else message.caption}"
         )
 
 
@@ -338,19 +344,22 @@ async def decline_msg(message: types.Message):
 )
 @dp.channel_post_handler(content_types=BAD_CONTENT_TYPES)
 @dp.channel_post_handler(
-    lambda message: message.sticker
-    and message.sticker.set_name in PROHIBITED_STICKERS,
+    lambda message: message.sticker and message.sticker.set_name in BAD_STICKERS,
     content_types=ContentType.STICKER,
 )
 async def delete_msg(message: types.Message):
     await message.delete()
     if message.content_type in BAD_CONTENT_TYPES:
         logging.info(
-            f"Deleted post with ID {message.message_id}, reason: {message.content_type}"
+            f"Deleted post with ID {message.message_id}, reason: bad media: {message.content_type}"
+        )
+    elif message.sticker:
+        logging.info(
+            f"Deleted post with ID {message.message_id}, reason: bad sticker: {message.sticker.set_name}"
         )
     else:
         logging.info(
-            f"Deleted post with ID {message.message_id}, reason: fuzzy match: {message.text if message.text else message.caption}"
+            f"Deleted post with ID {message.message_id}, reason: bad word: {message.text if message.text else message.caption}"
         )
 
 
