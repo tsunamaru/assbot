@@ -56,6 +56,11 @@ BAD_CONTENT_TYPES = [
     ContentType.VOICE,
 ]
 
+PROHIBITED_STICKERS = [
+    "pukpukpukpukpukpukpukpukpukpuk",
+    "ShnobelShnobel",
+]
+
 BAD_WORDS = [
     "финка нквд",
     "образца 1939",
@@ -95,6 +100,7 @@ BAD_WORDS = [
     "рарв",
     "rarrw",
     "пук",
+    "шнобель",
 ]
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
 
@@ -302,6 +308,11 @@ async def request_admin(message: types.Message):
     content_types=ATTACH_CONTENT_TYPES,
 )
 @dp.message_handler(content_types=BAD_CONTENT_TYPES)
+@dp.message_handler(
+    lambda message: message.sticker
+    and message.sticker.set_name in PROHIBITED_STICKERS,
+    content_types=ContentType.STICKER,
+)
 async def decline_msg(message: types.Message):
     await message.reply(f"Хуй будешь?")
     await message.delete()
@@ -325,6 +336,11 @@ async def decline_msg(message: types.Message):
     content_types=ATTACH_CONTENT_TYPES,
 )
 @dp.channel_post_handler(content_types=BAD_CONTENT_TYPES)
+@dp.channel_post_handler(
+    lambda message: message.sticker
+    and message.sticker.set_name in PROHIBITED_STICKERS,
+    content_types=ContentType.STICKER,
+)
 async def delete_msg(message: types.Message):
     await message.delete()
     if message.content_type in BAD_CONTENT_TYPES:
