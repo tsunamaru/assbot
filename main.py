@@ -59,6 +59,7 @@ BAD_CONTENT_TYPES = [
 PROHIBITED_STICKERS = [
     "pukpukpukpukpukpukpukpukpukpuk",
     "ShnobelShnobel",
+    "ShnobelLegend",
 ]
 
 BAD_WORDS = [
