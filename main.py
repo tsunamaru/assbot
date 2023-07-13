@@ -97,7 +97,7 @@ BAD_WORDS = [
     "рарв",
     "rarrw",
     "пук",
-    "шнобель",
+    "шнобел",
 ]
 
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
