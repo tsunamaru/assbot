@@ -56,6 +56,7 @@ BAD_STICKERS = [
     "pukpukpukpukpukpukpukpukpukpuk",
     "ShnobelShnobel",
     "ShnobelLegend",
+    "id18856784041663791842058_by_toWebmBot",
 ]
 
 BAD_WORDS = [
@@ -87,17 +88,25 @@ BAD_WORDS = [
     "Kizl_nozhi",
     "kizlyarnozh05",
     "cgpods",
-    "подписаться на канал",
+    "подписаться",
     "подпишись",
+    "подпишитесь",
     "подписывайся",
     "подписывайтесь",
+    "переходите в канал",
     "bc1q2cg5lyecjj5c9370wul84hjyrflwm7aa7hr2ll",
     "bc1qwa36ldcfkjdq33qu8n3cragsh6xexcf3an7cay",
     "раррв",
     "рарв",
     "rarrw",
+    "rarw",
     "пук",
     "шнобел",
+    "shnobel",
+    "stalinskiesokoly",
+    "читать продолжение",
+    "продолжение в источнике",
+    "продолжение в канал",
 ]
 
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
