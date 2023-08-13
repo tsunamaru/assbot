@@ -88,12 +88,14 @@ BAD_WORDS = [
     "Kizl_nozhi",
     "kizlyarnozh05",
     "cgpods",
+    "подписан",
     "подписаться",
     "подпишись",
     "подпишитесь",
     "подписывайся",
     "подписывайтесь",
     "переходите в канал",
+    "переходи в канал",
     "bc1q2cg5lyecjj5c9370wul84hjyrflwm7aa7hr2ll",
     "bc1qwa36ldcfkjdq33qu8n3cragsh6xexcf3an7cay",
     "раррв",
@@ -107,6 +109,8 @@ BAD_WORDS = [
     "читать продолжение",
     "продолжение в источнике",
     "продолжение в канал",
+    "теперь в телеграм",
+    "теперь в telegram",
 ]
 
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
