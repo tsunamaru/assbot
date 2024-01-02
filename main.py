@@ -112,6 +112,7 @@ BAD_WORDS = [
     "теперь в телеграм",
     "теперь в telegram",
     "KRAKEN",
+    "9AepHk1jJM"
 ]
 
 BAD_WORDS = list(map(lambda word: word.lower(), BAD_WORDS))
